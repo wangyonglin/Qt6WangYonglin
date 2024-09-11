@@ -2,12 +2,8 @@ QT += gui core gui multimedia opengl widgets
 
 TEMPLATE = lib
 DEFINES += QTWANG_LIBRARY
-#VERSION_MAJOR := $(shell echo "$(LIBAVUTIL_VERSION)" | awk -F. '{print $$1}')
-#VERSION_MINOR := $(shell echo "$(LIBAVUTIL_VERSION)" | awk -F. '{print $$2}')
-#VERSION_MICRO := $(shell echo "$(LIBAVUTIL_VERSION)" | awk -F. '{print $$3}')
-include(get-version-from-git.pri)
+include(version.pri)
 CONFIG += c++11
-
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -39,8 +35,6 @@ unix {
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
-    README.md \
-    get-version-from-git.pri
-
+    README.md
 RESOURCES += \
     resources.qrc
