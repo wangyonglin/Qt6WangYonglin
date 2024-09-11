@@ -24,15 +24,15 @@
 #include "QWangThreader.h"
 #include "QtWangYonglin_global.h"
 
-class QTWANGYONGLIN_EXPORT QWangAudioInput : public QWangThreader
+class QTWANGYONGLIN_EXPORT QWangSpeech : public QWangThreader
 {
     Q_OBJECT
 public:
-    explicit QWangAudioInput(QObject *parent = nullptr);
-
+    explicit QWangSpeech(QObject *parent = nullptr);
+    ~QWangSpeech();
 public slots:
-    void Start(int sampleRate, int channelCount, int sampleSize);
-    void Stop();
+    bool StartPlayer(int sampleRate, int channelCount, int sampleSize);
+    void StopPlayer();
 signals:
     void onRefreshFrame(QByteArray buffer);
 private:
@@ -40,7 +40,6 @@ private:
                         int channelCount=1,
                         int sampleSize=16);
 private:
-    QAudioFormat format;
     QAudioInput* audioInput;
     QIODevice *qIODevice;
     int sampleRate;

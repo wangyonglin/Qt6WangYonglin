@@ -2,7 +2,10 @@ QT += gui core gui multimedia opengl widgets
 
 TEMPLATE = lib
 DEFINES += QTWANG_LIBRARY
-VERSION = 1.0.1
+#VERSION_MAJOR := $(shell echo "$(LIBAVUTIL_VERSION)" | awk -F. '{print $$1}')
+#VERSION_MINOR := $(shell echo "$(LIBAVUTIL_VERSION)" | awk -F. '{print $$2}')
+#VERSION_MICRO := $(shell echo "$(LIBAVUTIL_VERSION)" | awk -F. '{print $$3}')
+include(get-version-from-git.pri)
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
@@ -17,14 +20,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    QWangAudioInput.cpp \
     QWangOpenGL.cpp \
+    QWangSpeaker.cpp \
+    QWangSpeech.cpp \
     QWangThreader.cpp
 
 HEADERS += \
-    QWangAudioInput.h \
-    QWangBase_global.h \
+    QtWangYonglin_global.h \
     QWangOpenGL.h \
+    QWangSpeaker.h \
+    QWangSpeech.h \
     QWangThreader.h
 
 # Default rules for deployment.
@@ -34,7 +39,8 @@ unix {
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
-    README.md
+    README.md \
+    get-version-from-git.pri
 
 RESOURCES += \
     resources.qrc

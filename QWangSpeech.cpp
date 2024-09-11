@@ -1,19 +1,25 @@
-#include "QWangAudioInput.h"
+#include "QWangSpeech.h"
 
-QWangAudioInput::QWangAudioInput(QObject *parent)
+QWangSpeech::QWangSpeech(QObject *parent)
     : QWangThreader{parent},
-    sampleRate(16000),
-    channelCount(1),
-    sampleSize(16)
+      sampleRate(16000),
+      channelCount(1),
+      sampleSize(16)
+{
+
+}
+
+QWangSpeech::~QWangSpeech()
 {
 
 }
 
 
-bool QWangAudioInput::initContextFormat(int sampleRate,
-                                    int channelCount,
-                                    int sampleSize){
-    qIODevice = nullptr;
+bool QWangSpeech::StartPlayer(int sampleRate,
+                              int channelCount,
+                              int sampleSize)
+{
+    QAudioFormat format;
     format.setSampleRate(sampleRate);
     format.setChannelCount(channelCount);      // 设定声道数目，mono(平声道)的声道数目是1；stero(立体声)的声道数目是2
     format.setSampleSize(sampleSize);       // 采样位深
@@ -26,11 +32,9 @@ bool QWangAudioInput::initContextFormat(int sampleRate,
     {
         format = info.nearestFormat(format);
     }
-
     audioInput = new QAudioInput(format,this);
-    qIODevice = audioInput->start(); // 这里可以直接写入到文件，咱不用直接就是播放 audioInput->start(file);
-    //qIODevice need to manual release, or will memory leak
-
+    audioInput->setVolume(0.5);
+    qIODevice = audioInput->start();
     if (qIODevice) {
         qDebug() << "device available";
         loopStart();
@@ -40,28 +44,20 @@ bool QWangAudioInput::initContextFormat(int sampleRate,
 }
 
 
-void QWangAudioInput::loopRunnable()
+void QWangSpeech::loopRunnable()
 {
     if(isRunning() && qIODevice){
-     QByteArray buffer= qIODevice->readAll();
-        if(!buffer.isEmpty()){
-          emit onRefreshFrame(buffer);
-      }
+        QByteArray audio_bytes= qIODevice->readAll();
+        if(!audio_bytes.isEmpty()){
+            emit onRefreshFrame(audio_bytes);
+        }
     }
 }
 
-void QWangAudioInput::Start(int sampleRate, int channelCount,int sampleSize)
+
+void QWangSpeech::StopPlayer()
 {
-
-    if(initContextFormat(sampleRate,channelCount,sampleSize))
-    {
-         loopStart();
-    }
-
-}
-
-void QWangAudioInput::Stop()
-{
+    loopStop();
     qIODevice->close();
     qIODevice=nullptr;
     audioInput->stop();
