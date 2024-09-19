@@ -19,10 +19,14 @@ public:
     void closePlayer();
     void openPlayer(const QString &description);
 
+    void setSampleRate(int sampleRate);
+    void setChannelCount(int channelCount);
+    void setSampleFormat(QAudioFormat::SampleFormat f);
 public slots:
     void writePlayer(const QByteArray &data);
 
 private:
+    QAudioFormat format;
     QMediaDevices *qMediaDevices;
     QAudioSink* qAudioSink;
     QIODevice *qIODevice;

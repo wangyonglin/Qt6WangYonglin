@@ -11,12 +11,12 @@
 namespace  Qt6WangYonglin {
 
 
-class QTWANGYONGLIN_EXPORT QThreader: public QThread
+class QTWANGYONGLIN_EXPORT QYonglinThreader: public QThread
 {
     Q_OBJECT
 public:
-    explicit QThreader(QObject *parent = nullptr);
-    ~QThreader() override;
+    explicit QYonglinThreader(QObject *parent = nullptr);
+    ~QYonglinThreader() override;
 
     enum State
     {

@@ -1,6 +1,6 @@
-#include "Qt6WangYonglin/QThreader.h"
+#include "QYonglinThreader.h"
 
-Qt6WangYonglin::QThreader::QThreader(QObject *parent)
+Qt6WangYonglin::QYonglinThreader::QYonglinThreader(QObject *parent)
     : QThread(parent),
     pauseFlag(false),
     stopFlag(false)
@@ -8,67 +8,67 @@ Qt6WangYonglin::QThreader::QThreader(QObject *parent)
 
 }
 
-Qt6WangYonglin::QThreader::~QThreader()
+Qt6WangYonglin::QYonglinThreader::~QYonglinThreader()
 {
 
 }
 
-Qt6WangYonglin::QThreader::State Qt6WangYonglin::QThreader::state() const
+Qt6WangYonglin::QYonglinThreader::State Qt6WangYonglin::QYonglinThreader::state() const
 {
     State s = Stoped;
-    if (!QThreader::isRunning())
+    if (!QYonglinThreader::isRunning())
     {
         s = Stoped;
     }
-    else if (QThreader::isRunning() && pauseFlag)
+    else if (QYonglinThreader::isRunning() && pauseFlag)
     {
         s = Paused;
     }
-    else if (QThreader::isRunning() && (!pauseFlag))
+    else if (QYonglinThreader::isRunning() && (!pauseFlag))
     {
         s = Running;
     }
     return s;
 }
 
-void Qt6WangYonglin::QThreader::startThread(QThreader::Priority pri)
+void Qt6WangYonglin::QYonglinThreader::startThread(QYonglinThreader::Priority pri)
 {
-    QThreader::start(pri);
+    QYonglinThreader::start(pri);
 }
 
 
 
-void Qt6WangYonglin::QThreader::stopThread()
+void Qt6WangYonglin::QYonglinThreader::stopThread()
 {
-    if (QThreader::isRunning())
+    if (QYonglinThreader::isRunning())
     {
         stopFlag = true;
         condition.wakeAll();
-        QThreader::quit();
-        QThreader::wait();
+        QYonglinThreader::quit();
+        QYonglinThreader::wait();
     }
 }
 
-void Qt6WangYonglin::QThreader::pauseThread()
+void Qt6WangYonglin::QYonglinThreader::pauseThread()
 {
-    if (QThreader::isRunning())
+    if (QYonglinThreader::isRunning())
     {
         pauseFlag = true;
     }
 }
 
-void Qt6WangYonglin::QThreader::resumeThread()
+void Qt6WangYonglin::QYonglinThreader::resumeThread()
 {
-    if (QThreader::isRunning())
+    if (QYonglinThreader::isRunning())
     {
         pauseFlag = false;
         condition.wakeAll();
     }
 }
 
-void Qt6WangYonglin::QThreader::run()
+void Qt6WangYonglin::QYonglinThreader::run()
 {
-    //qDebug() << "enter QThreader : " << QThreader::currentQThreaderId();
+    //qDebug() << "enter QYonglinThreader : " << QYonglinThreader::currentQYonglinThreaderId();
     while (!stopFlag)
     {
 
@@ -84,5 +84,5 @@ void Qt6WangYonglin::QThreader::run()
     pauseFlag = false;
     stopFlag = false;
 
-    //qDebug() << "exit QThreader : " << QThreader::currentQThreaderId();
+    //qDebug() << "exit QYonglinThreader : " << QYonglinThreader::currentQYonglinThreaderId();
 }

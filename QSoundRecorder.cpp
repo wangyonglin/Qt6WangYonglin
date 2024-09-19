@@ -9,6 +9,9 @@
 Qt6WangYonglin::QSoundRecorder::QSoundRecorder(QObject *parent)
     :QObject(parent)
 {
+    format.setSampleRate(16000);
+    format.setChannelCount(1);
+    format.setSampleFormat(QAudioFormat::UInt8);
     qMediaDevices=new QMediaDevices(this);
     qlistAudioDevice= qMediaDevices->audioInputs();
     for (auto &audioDevice : qlistAudioDevice){
@@ -24,13 +27,6 @@ QList<QAudioDevice> Qt6WangYonglin::QSoundRecorder::getAudioDevices(){
 
 void Qt6WangYonglin::QSoundRecorder::openRecorder(const QString & description)
 {
-
-
-    QAudioFormat format;
-    // Set up the desired format, for example:
-    format.setSampleRate(16000);
-    format.setChannelCount(1);
-    format.setSampleFormat(QAudioFormat::UInt8);
 
     QAudioDevice info = QMediaDevices::defaultAudioInput();
     if (!info.isFormatSupported(format)) {
@@ -87,4 +83,14 @@ void Qt6WangYonglin::QSoundRecorder::closeRecorder(){
         qAudioSource->stop();
         delete qAudioSource;
     }
+}
+
+void Qt6WangYonglin::QSoundRecorder::setSampleRate(int sampleRate){
+    format.setSampleRate(sampleRate);
+}
+void Qt6WangYonglin::QSoundRecorder::setChannelCount(int channelCount){
+    format.setChannelCount(channelCount);
+}
+void Qt6WangYonglin::QSoundRecorder::setSampleFormat(QAudioFormat::SampleFormat f){
+    format.setSampleFormat(f);
 }

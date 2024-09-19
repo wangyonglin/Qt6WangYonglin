@@ -15,9 +15,13 @@ public:
     QList<QAudioDevice> getAudioDevices();
     void closeRecorder();
     void openRecorder(const QString &description);
+    void setSampleRate(int sampleRate);
+    void setChannelCount(int channelCount);
+    void setSampleFormat(QAudioFormat::SampleFormat f);
 public slots:
     void readChanged();
 private:
+    QAudioFormat format;
     QMediaDevices *qMediaDevices;
     QAudioSource *qAudioSource;
     QIODevice *qIODevice;

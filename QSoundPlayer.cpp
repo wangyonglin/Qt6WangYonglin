@@ -1,16 +1,28 @@
-#include "Qt6WangYonglin/QSoundPlayer.h"
+#include "QSoundPlayer.h"
 #include <QDebug>
 #include <QAudioSink>
 
 Qt6WangYonglin::QSoundPlayer::QSoundPlayer(QObject *parent)
     : QObject{parent}
 {
+    format.setSampleRate(16000);
+    format.setChannelCount(1);
+    format.setSampleFormat(QAudioFormat::UInt8);
     qMediaDevices=new QMediaDevices(this);
     qlistAudioDevice= qMediaDevices->audioOutputs();
     for (auto &audioDevice : qlistAudioDevice){
         qInfo() << "扬声器:" <<     audioDevice.description();
     }
 
+}
+void Qt6WangYonglin::QSoundPlayer::setSampleRate(int sampleRate){
+    format.setSampleRate(sampleRate);
+}
+void Qt6WangYonglin::QSoundPlayer::setChannelCount(int channelCount){
+    format.setChannelCount(channelCount);
+}
+void Qt6WangYonglin::QSoundPlayer::setSampleFormat(QAudioFormat::SampleFormat f){
+    format.setSampleFormat(f);
 }
 
 QList<QAudioDevice> Qt6WangYonglin::QSoundPlayer::getAudioDevices()
@@ -28,12 +40,6 @@ void Qt6WangYonglin::QSoundPlayer::closePlayer()
 
 void Qt6WangYonglin::QSoundPlayer::openPlayer(const QString &description)
 {
-    QAudioFormat format;
-    // Set up the desired format, for example:
-    format.setSampleRate(16000);
-    format.setChannelCount(1);
-    format.setSampleFormat(QAudioFormat::UInt8);
-
     QAudioDevice info = QMediaDevices::defaultAudioOutput();
     if (!info.isFormatSupported(format)) {
         qWarning() << "Default format not supported, trying to use the nearest.";
