@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/opengl">
-        <file>image.fsh</file>
-        <file>image.vsh</file>
+        <file>resources/image.vsh</file>
+        <file>resources/image.fsh</file>
     </qresource>
 </RCC>

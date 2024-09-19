@@ -8,12 +8,15 @@
 #include <QWaitCondition>
 #include "QtWangYonglin_global.h"
 
-class QTWANGYONGLIN_EXPORT QWangThreader: public QThread
+namespace  Qt6WangYonglin {
+
+
+class QTWANGYONGLIN_EXPORT QThreader: public QThread
 {
     Q_OBJECT
 public:
-    explicit QWangThreader(QObject *parent = nullptr);
-    ~QWangThreader() override;
+    explicit QThreader(QObject *parent = nullptr);
+    ~QThreader() override;
 
     enum State
     {
@@ -27,10 +30,10 @@ public:
 
 
 public slots:
-    void loopStart(Priority pri = InheritPriority);
-    void loopStop();
-    void loopPause();
-    void loopResume();
+    void startThread(Priority pri = InheritPriority);
+    void stopThread();
+    void pauseThread();
+    void resumeThread();
 protected:
     virtual void run() override final;
     virtual void loopRunnable()=0;
@@ -40,4 +43,5 @@ private:
     QMutex mutex;
     QWaitCondition condition;
 };
+}
 #endif // QTWANGTHREAD_H

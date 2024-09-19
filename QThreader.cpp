@@ -1,72 +1,74 @@
-#include "QWangThreader.h"
+#include "Qt6WangYonglin/QThreader.h"
 
-QWangThreader::QWangThreader(QObject *parent)
+Qt6WangYonglin::QThreader::QThreader(QObject *parent)
     : QThread(parent),
     pauseFlag(false),
     stopFlag(false)
-{}
-
-QWangThreader::~QWangThreader()
 {
 
 }
 
-QWangThreader::State QWangThreader::state() const
+Qt6WangYonglin::QThreader::~QThreader()
+{
+
+}
+
+Qt6WangYonglin::QThreader::State Qt6WangYonglin::QThreader::state() const
 {
     State s = Stoped;
-    if (!QThread::isRunning())
+    if (!QThreader::isRunning())
     {
         s = Stoped;
     }
-    else if (QThread::isRunning() && pauseFlag)
+    else if (QThreader::isRunning() && pauseFlag)
     {
         s = Paused;
     }
-    else if (QThread::isRunning() && (!pauseFlag))
+    else if (QThreader::isRunning() && (!pauseFlag))
     {
         s = Running;
     }
     return s;
 }
 
-void QWangThreader::loopStart(QThread::Priority pri)
+void Qt6WangYonglin::QThreader::startThread(QThreader::Priority pri)
 {
-    QThread::start(pri);
+    QThreader::start(pri);
 }
 
 
 
-void QWangThreader::loopStop()
+void Qt6WangYonglin::QThreader::stopThread()
 {
-    if (QThread::isRunning())
+    if (QThreader::isRunning())
     {
         stopFlag = true;
         condition.wakeAll();
-        QThread::quit();
-        QThread::wait();
+        QThreader::quit();
+        QThreader::wait();
     }
 }
 
-void QWangThreader::loopPause()
+void Qt6WangYonglin::QThreader::pauseThread()
 {
-    if (QThread::isRunning())
+    if (QThreader::isRunning())
     {
         pauseFlag = true;
     }
 }
 
-void QWangThreader::loopResume()
+void Qt6WangYonglin::QThreader::resumeThread()
 {
-    if (QThread::isRunning())
+    if (QThreader::isRunning())
     {
         pauseFlag = false;
         condition.wakeAll();
     }
 }
 
-void QWangThreader::run()
+void Qt6WangYonglin::QThreader::run()
 {
-    //qDebug() << "enter thread : " << QThread::currentThreadId();
+    //qDebug() << "enter QThreader : " << QThreader::currentQThreaderId();
     while (!stopFlag)
     {
 
@@ -82,5 +84,5 @@ void QWangThreader::run()
     pauseFlag = false;
     stopFlag = false;
 
-    //qDebug() << "exit thread : " << QThread::currentThreadId();
+    //qDebug() << "exit QThreader : " << QThreader::currentQThreaderId();
 }

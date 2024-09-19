@@ -14,19 +14,23 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+INCLUDEPATH += $$PWD/include
+HEADERS += \
+    QSoundPlayer.h \
+    QSoundRecorder.h \
+    QThreader.h \
+    QWangOpenGL.h \
+    QtWangYonglin_global.h
+
 
 SOURCES += \
-    QWangOpenGL.cpp \
-    QWangSpeaker.cpp \
-    QWangSpeech.cpp \
-    QWangThreader.cpp
+    QSoundPlayer.cpp \
+    QSoundRecorder.cpp \
+    QThreader.cpp \
+    QWangOpenGL.cpp
 
-HEADERS += \
-    QtWangYonglin_global.h \
-    QWangOpenGL.h \
-    QWangSpeaker.h \
-    QWangSpeech.h \
-    QWangThreader.h
+
+
 
 # Default rules for deployment.
 unix {
@@ -38,3 +42,5 @@ DISTFILES += \
     README.md
 RESOURCES += \
     resources.qrc
+
+
