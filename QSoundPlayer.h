@@ -16,17 +16,15 @@ class QTWANGYONGLIN_EXPORT QSoundPlayer : public QObject
 public:
     explicit QSoundPlayer(QObject *parent = nullptr);
     QList<QAudioDevice> getAudioDevices();
-    void closePlayer();
-    void openPlayer(const QString &description);
-
-    void setSampleRate(int sampleRate);
-    void setChannelCount(int channelCount);
-    void setSampleFormat(QAudioFormat::SampleFormat f);
+    void init(const QAudioFormat &format);
+    QAudioFormat format();
+    void create(const QString &desc);
+    void destroy();
 public slots:
-    void writePlayer(const QByteArray &data);
+    void write(const QByteArray &data);
 
 private:
-    QAudioFormat format;
+    QAudioFormat qAudioFormat;
     QMediaDevices *qMediaDevices;
     QAudioSink* qAudioSink;
     QIODevice *qIODevice;

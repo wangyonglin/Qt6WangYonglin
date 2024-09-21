@@ -9,9 +9,9 @@
 Qt6WangYonglin::QSoundRecorder::QSoundRecorder(QObject *parent)
     :QObject(parent)
 {
-    format.setSampleRate(16000);
-    format.setChannelCount(1);
-    format.setSampleFormat(QAudioFormat::UInt8);
+    qAudioFormat.setSampleRate(16000);
+    qAudioFormat.setChannelCount(1);
+    qAudioFormat.setSampleFormat(QAudioFormat::UInt8);
     qMediaDevices=new QMediaDevices(this);
     qlistAudioDevice= qMediaDevices->audioInputs();
     for (auto &audioDevice : qlistAudioDevice){
@@ -24,23 +24,28 @@ QList<QAudioDevice> Qt6WangYonglin::QSoundRecorder::getAudioDevices(){
     return qlistAudioDevice;
 }
 
+void Qt6WangYonglin::QSoundRecorder::init(const QAudioFormat &format)
+{
+    qAudioFormat=format;
+}
 
-void Qt6WangYonglin::QSoundRecorder::openRecorder(const QString & description)
+
+void Qt6WangYonglin::QSoundRecorder::create(const QString & desc)
 {
 
     QAudioDevice info = QMediaDevices::defaultAudioInput();
-    if (!info.isFormatSupported(format)) {
+    if (!info.isFormatSupported(qAudioFormat)) {
         qWarning() << "Default format not supported, trying to use the nearest.";
     }
 
     QList<QAudioDevice> listAudioDevice= qMediaDevices->audioInputs();
     for (auto &audioDevice : listAudioDevice){
-        if(audioDevice.description() == description){
-            qAudioSource = new QAudioSource(audioDevice,format, this);
+        if(audioDevice.description() == desc){
+            qAudioSource = new QAudioSource(audioDevice,qAudioFormat, this);
             connect(qAudioSource, &QAudioSource::stateChanged, this, &QSoundRecorder::handleStateChanged);
-            qInfo() << tr("加载成功 麦克风[%1]").arg(description);
+            qInfo() << tr("加载成功 麦克风[%1]").arg(desc);
             qIODevice=qAudioSource->start();
-            connect(qIODevice,&QIODevice::readyRead,this,&Qt6WangYonglin::QSoundRecorder::readChanged);
+            connect(qIODevice,&QIODevice::readyRead,this,&Qt6WangYonglin::QSoundRecorder::readyRead);
             break;
         }
     }
@@ -48,10 +53,10 @@ void Qt6WangYonglin::QSoundRecorder::openRecorder(const QString & description)
 
 }
 
-void Qt6WangYonglin::QSoundRecorder::readChanged()
+void Qt6WangYonglin::QSoundRecorder::readyRead()
 {
     if(qIODevice){
-        emit readRecorder(qIODevice->readAll());
+        emit refresh(qIODevice->readAll());
     }
 }
 
@@ -78,19 +83,15 @@ void Qt6WangYonglin::QSoundRecorder::handleStateChanged(QAudio::State newState)
     }
 }
 
-void Qt6WangYonglin::QSoundRecorder::closeRecorder(){
+void Qt6WangYonglin::QSoundRecorder::destroy(){
     if(qAudioSource){
         qAudioSource->stop();
         delete qAudioSource;
     }
 }
 
-void Qt6WangYonglin::QSoundRecorder::setSampleRate(int sampleRate){
-    format.setSampleRate(sampleRate);
+QAudioFormat Qt6WangYonglin::QSoundRecorder::format()
+{
+    return qAudioFormat;
 }
-void Qt6WangYonglin::QSoundRecorder::setChannelCount(int channelCount){
-    format.setChannelCount(channelCount);
-}
-void Qt6WangYonglin::QSoundRecorder::setSampleFormat(QAudioFormat::SampleFormat f){
-    format.setSampleFormat(f);
-}
+

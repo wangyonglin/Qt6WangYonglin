@@ -13,21 +13,21 @@ class QTWANGYONGLIN_EXPORT QSoundRecorder : public QObject
 public:
     explicit QSoundRecorder(QObject *parent = nullptr);
     QList<QAudioDevice> getAudioDevices();
-    void closeRecorder();
-    void openRecorder(const QString &description);
-    void setSampleRate(int sampleRate);
-    void setChannelCount(int channelCount);
-    void setSampleFormat(QAudioFormat::SampleFormat f);
+    void init(const QAudioFormat &format);
+    void create(const QString &desc);
+    void destroy();
+    QAudioFormat format();
+
 public slots:
-    void readChanged();
+    void readyRead();
 private:
-    QAudioFormat format;
+    QAudioFormat qAudioFormat;
     QMediaDevices *qMediaDevices;
     QAudioSource *qAudioSource;
     QIODevice *qIODevice;
     QList<QAudioDevice> qlistAudioDevice;
 signals:
- void readRecorder(const QByteArray & data);
+ void refresh(const QByteArray & bytes);
 private slots:
     void handleStateChanged(QAudio::State newState);
 };
