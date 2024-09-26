@@ -5,13 +5,14 @@
 Qt6WangYonglin::QSoundPlayer::QSoundPlayer(QObject *parent)
     : QObject{parent}
 {
-    qAudioFormat.setSampleRate(16000);
-    qAudioFormat.setChannelCount(1);
-    qAudioFormat.setSampleFormat(QAudioFormat::UInt8);
+    defaultDevice = QMediaDevices::defaultAudioOutput();
+    defaultFormat.setSampleRate(16000);
+    defaultFormat.setChannelCount(1);
+    defaultFormat.setSampleFormat(QAudioFormat::UInt8);
     qMediaDevices=new QMediaDevices(this);
     qlistAudioDevice= qMediaDevices->audioOutputs();
     for (auto &audioDevice : qlistAudioDevice){
-        qInfo() << "扬声器:" <<     audioDevice.description();
+        qInfo() << "可用扬声器:" <<     audioDevice.description();
     }
 
 }
@@ -22,14 +23,21 @@ QList<QAudioDevice> Qt6WangYonglin::QSoundPlayer::getAudioDevices()
     return qlistAudioDevice;
 }
 
-void Qt6WangYonglin::QSoundPlayer::init(const QAudioFormat &format)
+void Qt6WangYonglin::QSoundPlayer::init(const QAudioFormat &format,const QString &description)
 {
-    qAudioFormat=format;
+    defaultFormat=format;
+    QList<QAudioDevice> listDevice= qMediaDevices->audioOutputs();
+    for (auto &currentDevice : listDevice){
+        if(currentDevice.description() == description){
+            defaultDevice=currentDevice;
+            break;
+        }
+    }
 }
 
 QAudioFormat Qt6WangYonglin::QSoundPlayer::format()
 {
-    return qAudioFormat;
+    return defaultFormat;
 }
 
 void Qt6WangYonglin::QSoundPlayer::destroy()
@@ -40,22 +48,18 @@ void Qt6WangYonglin::QSoundPlayer::destroy()
     }
 }
 
-void Qt6WangYonglin::QSoundPlayer::create(const QString &desc)
+void Qt6WangYonglin::QSoundPlayer::create()
 {
-    QAudioDevice info = QMediaDevices::defaultAudioOutput();
-    if (!info.isFormatSupported(qAudioFormat)) {
+
+    if (!defaultDevice.isFormatSupported(defaultFormat)) {
         qWarning() << "Default format not supported, trying to use the nearest.";
     }
+    qAudioSink= new QAudioSink(defaultDevice, defaultFormat,this);
+    qInfo() << tr("加载成功 扬声器[%1]").arg(defaultDevice.description());
+    qInfo() << tr("加载成功 扬声器sampleRate[%1]").arg(defaultFormat.sampleRate());
+    qIODevice=qAudioSink->start();
 
-    QList<QAudioDevice> listAudioDevice= qMediaDevices->audioOutputs();
-    for (auto &audioDevice : listAudioDevice){
-        if(audioDevice.description() == desc){
-            qAudioSink= new QAudioSink(audioDevice, qAudioFormat);
-            qInfo() << tr("加载成功 扬声器[%1]").arg(desc);
-            qIODevice=qAudioSink->start();
-            break;
-        }
-    }
+
 }
 
 void Qt6WangYonglin::QSoundPlayer::write(const QByteArray &audio_bytes)
