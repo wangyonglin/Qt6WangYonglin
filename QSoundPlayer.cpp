@@ -8,10 +8,10 @@ Qt6WangYonglin::QSoundPlayer::QSoundPlayer(QObject *parent)
     defaultDevice = QMediaDevices::defaultAudioOutput();
     defaultFormat.setSampleRate(16000);
     defaultFormat.setChannelCount(1);
-    defaultFormat.setSampleFormat(QAudioFormat::UInt8);
+    defaultFormat.setSampleFormat(QAudioFormat::Int16);
     qMediaDevices=new QMediaDevices(this);
-    qlistAudioDevice= qMediaDevices->audioOutputs();
-    for (auto &audioDevice : qlistAudioDevice){
+    listDevices= qMediaDevices->audioOutputs();
+    for (auto &audioDevice : listDevices){
         qInfo() << "可用扬声器:" <<     audioDevice.description();
     }
 
@@ -20,14 +20,14 @@ Qt6WangYonglin::QSoundPlayer::QSoundPlayer(QObject *parent)
 
 QList<QAudioDevice> Qt6WangYonglin::QSoundPlayer::getAudioDevices()
 {
-    return qlistAudioDevice;
+    return listDevices;
 }
 
 void Qt6WangYonglin::QSoundPlayer::init(const QAudioFormat &format,const QString &description)
 {
     defaultFormat=format;
-    QList<QAudioDevice> listDevice= qMediaDevices->audioOutputs();
-    for (auto &currentDevice : listDevice){
+
+    for (auto &currentDevice : listDevices){
         if(currentDevice.description() == description){
             defaultDevice=currentDevice;
             break;
@@ -55,8 +55,7 @@ void Qt6WangYonglin::QSoundPlayer::create()
         qWarning() << "Default format not supported, trying to use the nearest.";
     }
     qAudioSink= new QAudioSink(defaultDevice, defaultFormat,this);
-    qInfo() << tr("加载成功 扬声器[%1]").arg(defaultDevice.description());
-    qInfo() << tr("加载成功 扬声器sampleRate[%1]").arg(defaultFormat.sampleRate());
+    qInfo() << tr("Speakers - %1").arg(defaultDevice.description());
     qIODevice=qAudioSink->start();
 
 

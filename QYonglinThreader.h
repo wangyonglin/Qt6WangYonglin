@@ -6,12 +6,12 @@
 #include <QDebug>
 #include <QMutex>
 #include <QWaitCondition>
-#include "QtWangYonglin_global.h"
+#include "Qt6WangYonglin_global.h"
 
 namespace  Qt6WangYonglin {
 
 
-class QTWANGYONGLIN_EXPORT QYonglinThreader: public QThread
+class QT6WANGYONGLIN_EXPORT QYonglinThreader: public QThread
 {
     Q_OBJECT
 public:

@@ -2,12 +2,12 @@
 #define QSOUNDRECORDER_H
 
 
-#include "QtWangYonglin_global.h"
+#include "Qt6WangYonglin_global.h"
 #include <QMediaDevices>
 #include <QAudioSource>
 
 namespace Qt6WangYonglin {
-class QTWANGYONGLIN_EXPORT QSoundRecorder : public QObject
+class QT6WANGYONGLIN_EXPORT QSoundRecorder : public QObject
 {
     Q_OBJECT
 public:
@@ -26,7 +26,7 @@ private:
     QMediaDevices *qMediaDevices;
     QAudioSource *qAudioSource;
     QIODevice *qIODevice;
-    QList<QAudioDevice> qlistAudioDevice;
+    QList<QAudioDevice> listDevices;
 signals:
  void refresh(const QByteArray & bytes);
 private slots:

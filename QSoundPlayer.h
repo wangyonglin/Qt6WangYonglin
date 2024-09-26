@@ -2,7 +2,7 @@
 #define QSOUNDPLAYER_H
 
 #include <QObject>
-#include "QtWangYonglin_global.h"
+#include "Qt6WangYonglin_global.h"
 #include <QAudioDevice>
 #include <QMediaDevices>
 #include <QAudioSource>
@@ -10,7 +10,7 @@
 
 namespace Qt6WangYonglin {
 
-class QTWANGYONGLIN_EXPORT QSoundPlayer : public QObject
+class QT6WANGYONGLIN_EXPORT QSoundPlayer : public QObject
 {
     Q_OBJECT
 public:
@@ -29,7 +29,7 @@ private:
     QMediaDevices *qMediaDevices;
     QAudioSink* qAudioSink;
     QIODevice *qIODevice;
-    QList<QAudioDevice> qlistAudioDevice;
+    QList<QAudioDevice> listDevices;
 signals:
 };
 }

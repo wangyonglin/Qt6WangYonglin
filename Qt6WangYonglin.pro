@@ -20,7 +20,7 @@ HEADERS += \
     QSoundRecorder.h \
     QWangOpenGL.h \
     QYonglinThreader.h \
-    QtWangYonglin_global.h
+    Qt6WangYonglin_global.h
 
 
 SOURCES += \
